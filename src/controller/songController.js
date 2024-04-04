@@ -1,5 +1,6 @@
 import { inject } from 'inversify';
-import container from './inversify.config.js'; class SongController {
+import { container } from '../config/container'
+class SongController {
 
   constructor() {
     this.songService = container.get < SongService > (SongService);
