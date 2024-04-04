@@ -1,20 +1,19 @@
-const { configureContainer } = require('../config/container')
-const { Get, Post } = require('@decorators/express')
-const { SongService } = require('../service/songService')
+const { injectable, inject } = require('inversify')
+const { Container } = require('inversify')
+const container = new Container()
 
+@injectable()
 class SongController {
-  constructor() {
-    this.songService = configureContainer.get(SongService)
+  constructor(@inject('SongService') songService) {
+    this.songService = songService
   }
 
-  @Post('/songs/upload')
   async uploadSong(request, response) {
     return this.songService.uploadSong(request)
   }
 
-  @Get('/songs/stream/:songId')
   async streamSong(request, response) {
-    const song = await this.songService.streamSong(request, response)
+    const song = await this.songService.streamSong(request.params.songId) // Assuming songId is extracted from params
     return response.status(200).json({ message: 'stream song success' })
   }
 }
