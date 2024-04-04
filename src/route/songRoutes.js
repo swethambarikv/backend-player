@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import multer from 'multer'
-import SongController from '../controller/songController.js'
+import { SongController } from '../controller/songController'
+
 
 const upload = multer({ dest: 'uploads/' })
 const songRoutes = Router()

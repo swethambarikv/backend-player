@@ -1,8 +1,9 @@
-import Songservice from '../service/songService.js'
-
+import { inject } from 'inversify';
+import { container } from '../config/container'
 class SongController {
+
   constructor() {
-    this.songService = new Songservice()
+    this.songService = container.get < SongService > (SongService);
   }
 
   uploadSong = async (request, response) => {
