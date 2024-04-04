@@ -32,4 +32,4 @@ class SongRepository {
   }
 }
 
-export default SongRepository
+module.exports = SongRepository

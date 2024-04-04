@@ -1,4 +1,5 @@
-import mongoose, { Types, model } from 'mongoose'
+const mongoose = require('mongoose')
+const { Types, model } = mongoose
 
 const songSchema = new mongoose.Schema({
   title: {
@@ -18,4 +19,4 @@ const songSchema = new mongoose.Schema({
   }
 })
 
-export default model('Songs', songSchema)
+module.exports = model('Songs', songSchema)

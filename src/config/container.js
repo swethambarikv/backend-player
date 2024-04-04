@@ -1,28 +1,39 @@
-import { Container } from 'inversify';
-import * as fs from 'fs';
-import * as path from 'path';
+const { Container } = require('inversify')
+const fs = require('fs')
+const path = require('path')
 
-export function configureContainer() {
-    const container = new Container();
-    const controllersDir = path.join(__dirname, '../controller');
-    const controllerFiles = fs.readdirSync(controllersDir);
-    controllerFiles.forEach(file => {
-        if (file.endsWith('.js')) {
-            const controllerModule = require(path.join(controllersDir, file));
-            const controllerName = Object.keys(controllerModule)[0];
-            const Controller = controllerModule[controllerName];
-            container.bind(Controller).toSelf();
+async function configureContainer() {
+  const container = new Container()
+  const directories = [
+    path.join(__dirname, '../controller'),
+    path.join(__dirname, '../route')
+  ]
+  async function importDirectory(dirPath) {
+    const files = fs.readdirSync(dirPath)
+    for (const file of files) {
+      if (file.endsWith('.js')) {
+        const filePath = path.join(dirPath, file)
+        try {
+          const module = await import(filePath)
+          const exportedClass = module.default
+          if (
+            exportedClass &&
+            Reflect.getMetadata('inversify:paramtypes', exportedClass)
+          ) {
+            container.bind(exportedClass).toSelf()
+          }
+        } catch (err) {
+          console.error(`Error importing from ${filePath}:`, err)
         }
-    });
+      }
+    }
+  }
 
-    const routesDir = path.join(__dirname, '../route');
-    const routeFiles = fs.readdirSync(routesDir);
-    routeFiles.forEach(file => {
-        if (file.endsWith('.js')) {
-            const routesModule = require(path.join(routesDir, file));
-            container.bind(routesModule).toSelf();
-        }
-    });
+  for (const dirPath of directories) {
+    await importDirectory(dirPath)
+  }
 
-    return container;
+  return container
 }
+
+module.exports = { configureContainer }

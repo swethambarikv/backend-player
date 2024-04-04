@@ -1,19 +1,22 @@
-import { inject } from 'inversify';
-import { container } from '../config/container'
-class SongController {
+const { configureContainer } = require('../config/container')
+const { Get, Post } = require('@decorators/express')
+const { SongService } = require('../service/songService')
 
+class SongController {
   constructor() {
-    this.songService = container.get < SongService > (SongService);
+    this.songService = configureContainer.get(SongService)
   }
 
-  uploadSong = async (request, response) => {
+  @Post('/songs/upload')
+  async uploadSong(request, response) {
     return this.songService.uploadSong(request)
   }
 
-  streamSong = async (request, response) => {
-    const song = await this.songService.streamSongs(request, response)
+  @Get('/songs/stream/:songId')
+  async streamSong(request, response) {
+    const song = await this.songService.streamSong(request, response)
     return response.status(200).json({ message: 'stream song success' })
   }
 }
 
-export default SongController
+module.exports = SongController

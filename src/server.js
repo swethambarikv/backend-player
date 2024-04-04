@@ -1,15 +1,21 @@
-import express from 'express';
-import './database.js';
-import router from './route/index.js';
-import { configureContainer } from './config/container.js';
-import { Types } from './config/types.js';
+const express = require('express')
+const { configureContainer } = require('./config/container')
+const Types = require('./config/types')
+require('./database.js')
+const router = require('./route/index.js')
 
-const app = express();
-const container = configureContainer();
-const route = container.get(Types.Routes);
-route.routes(app);
+const app = express()
 
-app.use(express.json());
-app.use('/api', router);
+configureContainer()
+  .then(container => {
+    const route = container.get(Types.Routes)
+    route.routes(app)
 
-app.listen(8080, () => console.log('server running in the port 8080'));
+    app.use(express.json())
+    app.use('/api', router)
+
+    app.listen(8080, () => console.log('server running in the port 8080'))
+  })
+  .catch(error => {
+    console.error('Error configuring container:', error)
+  })

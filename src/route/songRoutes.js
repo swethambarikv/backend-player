@@ -1,13 +1,13 @@
-import { Router } from 'express'
-import multer from 'multer'
-import { SongController } from '../controller/songController'
-
+const express = require('express')
+const multer = require('multer')
+const { Router } = express
+const SongController = require('../controller/songController.js')
 
 const upload = multer({ dest: 'uploads/' })
 const songRoutes = Router()
-const song = new SongController()
+const songController = new SongController()
 
-songRoutes.post('/upload', upload.single('file'), song.uploadSong)
-songRoutes.get('/stream/:trackId', song.streamSong)
+songRoutes.post('/upload', upload.single('file'), songController.uploadSong)
+songRoutes.get('/songs/stream/:songId', songController.streamSong)
 
-export default songRoutes
+module.exports = songRoutes

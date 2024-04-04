@@ -1,8 +1,9 @@
-import { Router } from 'express'
-import songRoutes from './songRoutes.js'
+const express = require('express')
+const SongController = require('../controller/songController')
 
-const router = Router()
+const router = express.Router()
+const songController = new SongController()
 
-router.use('/song', songRoutes)
+router.use(songController.getRouter())
 
-export default router
+module.exports = router

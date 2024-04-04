@@ -1,6 +1,6 @@
 const Types = {
-    Controller: Symbol.for("songController"),
-    Routes: Symbol.for("Routes")
+  Controller: Symbol.for('SongController'),
+  Routes: Symbol.for('Routes')
 }
 
-export { Types }
+module.exports = Types

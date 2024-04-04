@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
-import fs from 'fs'
-import gridfs from 'gridfs-stream'
+const mongoose = require('mongoose')
+const fs = require('fs')
+const gridfs = require('gridfs-stream')
 
-import SongRepository from '../repository/songRepository.js'
-import songSchema from '../model/songSchema.js'
-import { ObjectId } from 'mongodb'
+const SongRepository = require('../repository/songRepository.js')
+const songSchema = require('../model/songSchema.js')
+const { ObjectId } = require('mongodb')
 
 class SongService {
   constructor() {
@@ -72,4 +72,6 @@ class SongService {
   }
 }
 
-export default SongService
+// export default SongService
+
+module.exports = SongService
