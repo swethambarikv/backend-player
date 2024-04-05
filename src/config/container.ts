@@ -11,7 +11,7 @@ async function configureContainer() {
   async function importDirectory(dirPath) {
     const files = fs.readdirSync(dirPath)
     for (const file of files) {
-      if (file.endsWith('.js')) {
+      if (file.endsWith('.ts')) {
         const filePath = path.join(dirPath, file)
         try {
           const module = await import(filePath)
