@@ -1,10 +1,11 @@
-const express = require('express')
-const { configureContainer } = require('./config/container')
-const Types = require('./config/types')
-require('./database.js')
-const router = require('./route/index.js')
+import express from 'express';
+import { configureContainer } from './config/container';
+import Types from './config/types';
+import './database.js'; 
+import router from './route/index.js';
 
-const app = express()
+const app = express();
+
 
 configureContainer()
   .then(container => {

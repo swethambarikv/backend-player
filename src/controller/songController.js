@@ -1,19 +1,17 @@
-const { injectable, inject } = require('inversify')
-const { Container } = require('inversify')
-const container = new Container()
+import { Injectable, Inject } from 'inversify';
 
-@injectable()
+@Injectable()
 class SongController {
-  constructor(@inject('SongService') songService) {
+  constructor(@Inject('SongService') songService) {
     this.songService = songService
   }
 
-  async uploadSong(request, response) {
+  async upload(request, response) {
     return this.songService.uploadSong(request)
   }
 
-  async streamSong(request, response) {
-    const song = await this.songService.streamSong(request.params.songId) // Assuming songId is extracted from params
+  async stream(request, response) {
+    const song = await this.songService.streamSong(request.params.songId) 
     return response.status(200).json({ message: 'stream song success' })
   }
 }

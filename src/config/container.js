@@ -1,6 +1,6 @@
-const { Container } = require('inversify')
-const fs = require('fs')
-const path = require('path')
+import { Container } from 'inversify';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function configureContainer() {
   const container = new Container()

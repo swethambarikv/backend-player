@@ -1,8 +1,9 @@
-const express = require('express')
-const multer = require('multer')
-const { Router } = express
-const SongController = require('../controller/songController.js')
+import * as express from 'express'; 
+import multer from 'multer';
 
+import { SongController } from '../controller/songController'
+
+const Router = express.Router(); 
 const upload = multer({ dest: 'uploads/' })
 const songRoutes = Router()
 const songController = new SongController()
