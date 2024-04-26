@@ -1,39 +1,34 @@
-const { Container } = require('inversify')
-const fs = require('fs')
-const path = require('path')
+import { Container } from 'inversify';
+import { readdirSync } from 'fs';
+import { join } from 'path';
+import 'reflect-metadata';
 
-async function configureContainer() {
-  const container = new Container()
-  const directories = [
-    path.join(__dirname, '../controller'),
-    path.join(__dirname, '../route')
-  ]
-  async function importDirectory(dirPath) {
-    const files = fs.readdirSync(dirPath)
+async function importFilesFromFolders(rootDir: string, folders: string[]): Promise<void> {
+  const container = new Container();
+
+  for (const folder of folders) {
+    const folderPath = join(rootDir, folder);
+    const files = readdirSync(folderPath);
+
     for (const file of files) {
       if (file.endsWith('.ts')) {
-        const filePath = path.join(dirPath, file)
+        const filePath = join(folderPath, file);
         try {
-          const module = await import(filePath)
-          const exportedClass = module.default
-          if (
-            exportedClass &&
-            Reflect.getMetadata('inversify:paramtypes', exportedClass)
-          ) {
-            container.bind(exportedClass).toSelf()
+          const module = await import(filePath);
+          const exportedClass = module.default;
+          if (exportedClass && Reflect.getMetadata('inversify:paramtypes', exportedClass)) {
+            container.bind(exportedClass).toSelf();
           }
         } catch (err) {
-          console.error(`Error importing from ${filePath}:`, err)
+          console.error(`Error importing file: ${filePath}`, err);
         }
       }
     }
   }
-
-  for (const dirPath of directories) {
-    await importDirectory(dirPath)
-  }
-
-  return container
 }
 
-module.exports = { configureContainer }
+export async function loader(): Promise<void> {
+  const rootDir = join(__dirname, '../src');
+  const folders = ['controller', 'route']; 
+  await importFilesFromFolders(rootDir, folders);
+}
